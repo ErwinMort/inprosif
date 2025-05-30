@@ -1,0 +1,12 @@
+header {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+    max-height: 50px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    color: #ffc107; /* Color de hover */
+}

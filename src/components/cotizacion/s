@@ -1,0 +1,205 @@
+CREATE DATABASE INPROSI;
+USE INPROSI;
+
+CREATE TABLE usuario (
+    id_us INT NOT NULL AUTO_INCREMENT,
+    email_us VARCHAR(50) UNIQUE,
+    pass_us VARCHAR(255) UNIQUE,
+    tipo_us ENUM('0','1') DEFAULT '1',
+    estatus_us ENUM('0','1') DEFAULT '1',
+    sesion_us ENUM('0','1') DEFAULT '0',
+    fecha_us TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_us)
+);
+
+CREATE TABLE estado (
+    cve_est CHAR(5) UNIQUE,
+    nom_est CHAR(35) UNIQUE,
+    mun_est CHAR(40),
+    fecha_est TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (cve_est)
+);
+
+INSERT INTO estado (cve_est, nom_est) VALUES
+    ("E_001", "Aguascalientes"),
+    ("E_002", "Baja California Norte"),
+    ("E_003", "Baja California Sur"),
+    ("E_004", "Campeche"),
+    ("E_005", "Coahuila de Zaragoza"),
+    ("E_006", "Colima"),
+    ("E_007", "Chiapas"),
+    ("E_008", "Chihuahua"),
+    ("E_009", "Ciudad de México"),
+    ("E_010", "Durango"),
+    ("E_011", "Guanajuato"),
+    ("E_012", "Guerrero"),
+    ("E_013", "Hidalgo"),
+    ("E_014", "Jalisco"),
+    ("E_015", "Edo. de México"),
+    ("E_016", "Michoacán de Ocampo"),
+    ("E_017", "Morelos"),
+    ("E_018", "Nayarit"),
+    ("E_019", "Nuevo León"),
+    ("E_020", "Oaxaca"),
+    ("E_021", "Puebla"),
+    ("E_022", "Querétaro"),
+    ("E_023", "Quintana Roo"),
+    ("E_024", "San Luis Potosí"),
+    ("E_025", "Sinaloa"),
+    ("E_026", "Sonora"),
+    ("E_027", "Tabasco"),
+    ("E_028", "Tamaulipas"),
+    ("E_029", "Tlaxcala"),
+    ("E_030", "Veracruz de Ignacio de la Llave"),
+    ("E_031", "Yucatán"),
+    ("E_032", "Zacatecas");
+
+CREATE TABLE cliente (
+    id_clie INT NOT NULL AUTO_INCREMENT,
+    nom_clie CHAR(50),
+    tel_clie CHAR(14),
+    col_clie CHAR(30),
+    cp_clie INT(8),
+    dir_clie TEXT,
+    id_us INT,  -- Se debe definir la columna id_us
+    cve_est CHAR(5),  -- Se debe definir la columna cve_est
+    PRIMARY KEY (id_clie),
+    FOREIGN KEY (id_us) REFERENCES usuario(id_us),
+    FOREIGN KEY (cve_est) REFERENCES estado(cve_est)
+);
+
+
+CREATE TABLE proveedor (
+    id_prov INT NOT NULL AUTO_INCREMENT,
+    nom_prov VARCHAR(60),
+    desc_prov VARCHAR(150),
+    tel_prov CHAR(14),
+    email_prov VARCHAR(50) UNIQUE,
+    asesorv_prov VARCHAR(150),
+    notas_prov TEXT,
+    estatus_prov ENUM('0','1') DEFAULT '1',
+    fecha_prov TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_prov),
+    cve_est CHAR(5),  -- Se debe definir la columna cve_est
+    FOREIGN KEY (cve_est) REFERENCES estado(cve_est)
+);
+
+
+CREATE TABLE proceso (
+    id_pco INT NOT NULL AUTO_INCREMENT,
+    nom_pco VARCHAR(150),
+    desc_pco VARCHAR(150),
+    caract_pco VARCHAR(150),
+    alcance_pco VARCHAR(150),
+    otro_pco VARCHAR(150),
+    estatus_pco ENUM('0','1') DEFAULT '1',
+    fecha_pco TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_pco),
+    id_prov INT,  -- Se debe definir la columna id_prov
+    FOREIGN KEY (id_prov) REFERENCES proveedor(id_prov)
+);
+
+
+CREATE TABLE material (
+    id_mat INT NOT NULL AUTO_INCREMENT,
+    nom_mat VARCHAR(150),
+    desc_mat VARCHAR(150),
+    notas_mat VARCHAR(150),
+    estatus_mat ENUM('0','1') DEFAULT '1',
+    fecha_mat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_mat),
+    id_prov INT,  -- Se debe definir la columna id_prov
+    FOREIGN KEY (id_prov) REFERENCES proveedor(id_prov)
+);
+
+
+CREATE TABLE producto (
+    id_prod INT NOT NULL AUTO_INCREMENT,
+    nom_prod CHAR(40),
+    desc_prod TEXT,
+    img_prod TEXT,
+    estatus_prod ENUM('0','1') DEFAULT '1',
+    public_prod ENUM('0','1') DEFAULT '1',
+    fecha_prod TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_prod),
+    id_pco INT,  -- Se debe definir la columna id_pco
+    id_mat INT,  -- Se debe definir la columna id_mat
+    FOREIGN KEY (id_pco) REFERENCES proceso(id_pco),
+    FOREIGN KEY (id_mat) REFERENCES material(id_mat)
+);
+
+
+CREATE TABLE venta (
+    num_vta INT(7) NOT NULL AUTO_INCREMENT,
+    fecha_vta DATE,
+    unidad_vta INT,
+    costop_vta DOUBLE(8,2),
+    estatus_vta ENUM('0','1') DEFAULT '1',
+    fechafin_vta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (num_vta),
+    id_clie INT,  -- Se debe definir la columna id_clie
+    id_prod INT,  -- Se debe definir la columna id_prod
+    FOREIGN KEY (id_clie) REFERENCES cliente(id_clie),
+    FOREIGN KEY (id_prod) REFERENCES producto(id_prod)
+);
+
+
+CREATE TABLE detventa (
+    id_dta INT(7) NOT NULL AUTO_INCREMENT,
+    pagtot_dta DOUBLE(8,2),
+    cant_dta INT(14),
+    precuni_dta DOUBLE(8,2),
+    PRIMARY KEY (id_dta),
+    id_prod INT,  -- Se debe definir la columna id_prod
+    num_vta INT,  -- Se debe definir la columna num_vta
+    FOREIGN KEY (id_prod) REFERENCES producto(id_prod),
+    FOREIGN KEY (num_vta) REFERENCES venta(num_vta)
+);
+
+
+CREATE TABLE cotizacion (
+    id_cot INT(7) NOT NULL AUTO_INCREMENT,
+    cantprod_cot INT, [cantidad del producto que estamos eliguiedo]
+    fecha_cot TIMESTAMP DEFAULT CURRENT_TIMESTAMP, []
+    uniprod_cot INT, [piezas,litros,unidades]
+    precprod_cot DOUBLE(8,2), [precio unitario]
+    imptot_cot DOUBLE(8,2), []
+    subtot_cot DOUBLE(8,2),
+    iva_cot DOUBLE(8,2),
+    isr_cot FLOAT, [si aplica para empresa]
+    total_cot DOUBLE(8,2), [monto general]
+    monlet_prod TEXT, [en letras del monto general]
+    notas_cot TEXT, [por parte del admin]
+    estatus_cot ENUM('0','1','2','3') DEFAULT '1',
+    PRIMARY KEY (id_cot),
+    id_clie INT,  -- Se debe definir la columna id_clie
+    id_prod INT,  -- Se debe definir la columna id_prod
+    FOREIGN KEY (id_clie) REFERENCES cliente(id_clie),
+    FOREIGN KEY (id_prod) REFERENCES producto(id_prod)
+);
+
+CREATE TABLE evidencia (
+    id_evid INT(7) NOT NULL AUTO_INCREMENT,
+    img_evid JSON,
+    estatus_evid ENUM('0','1'),
+    id_cot INT,
+    id_clie INT,
+    id_prod INT,
+    PRIMARY KEY (id_evid),
+    FOREIGN KEY (id_cot) REFERENCES cotizacion(id_cot),
+    FOREIGN KEY (id_clie) REFERENCES cliente(id_clie),
+    FOREIGN KEY (id_prod) REFERENCES producto(id_prod)
+);
+INSERT INTO evidencia (img_evid, estatus_evid, id_cot, id_clie, id_prod)
+VALUES 
+('["imagen1", "imagen2", "imagen3"]', '1', 40, 1, 1),
+('["foto_producto1", "foto_producto2", "foto_producto3"]', '1', 41, 2, 2),
+('["imageA", "imageB", "imageC"]', '1', 42, 3, 1);
+
+
+
+INSERT INTO evidencia (img_evid,estatus_evid,id_cot, id_clie, id_prod) 
+VALUES 
+('evidencia1', 1,40,1, 1),
+('evidencia2', 1,41, 2,2),
+('evidencia3', 1,42,3, 1);

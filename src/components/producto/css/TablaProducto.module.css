@@ -1,0 +1,52 @@
+.container {
+    padding: 1rem;
+}
+
+.card {
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+.table-responsive {
+    margin-top: 1rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.table-danger {
+    background-color: #f8d7da;
+}
+
+.bg-danger {
+    background-color: #f44336 !important;
+}
+
+.text-white {
+    color: white !important;
+}
+
+@media (max-width: 768px) {
+    .table th, .table td {
+        padding: 0.3rem;
+    }
+
+    .d-none {
+        display: none !important;
+    }
+
+    .d-md-table-cell {
+        display: table-cell !important;
+    }
+
+    .d-lg-table-cell {
+        display: table-cell !important;
+    }
+}

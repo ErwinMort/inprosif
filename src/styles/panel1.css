@@ -1,0 +1,96 @@
+/* Estilos básicos para contenedores y botones */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #c7c7c7;
+    margin: 0;
+    display: flex;
+}
+
+.logo h1 {
+    font-size: 25px; /* Tamaño de fuente reducido */
+    margin: 12; /* Eliminar margen */
+    text-align: center; /* Centrar el texto */
+}
+
+header {
+    background-color: #06163a;
+    padding: 10px 20px;
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #06163a;
+    color: #fff;
+    position: fixed;
+    top: 60px;
+    bottom: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar .profile {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.sidebar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.sidebar button:hover {
+    background-color: #c01300;
+}
+
+/* Estilos mejorados para los enlaces de navegación */
+.nav-btn {
+    display: flex;  /* Cambia a flex para alinear íconos y texto */
+    align-items: center;  /* Centra verticalmente el icono y el texto */
+    justify-content: flex-start; /* Alinea el contenido hacia la izquierda */
+    margin: 10px 0;
+    padding: 8px;
+    width: 90%;
+    background-color: #333;
+    color: #fff;
+    text-align: left;  /* Justifica el texto hacia la izquierda */
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;  /* Bordes redondeados más suaves */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;  /* Transición suave */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Añade una sombra suave */
+}
+
+.nav-btn i {
+    margin-right: 10px;  /* Añade espacio entre el icono y el texto */
+}
+
+.nav-btn:hover {
+    background-color: #c01300;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);  /* Aumenta la sombra al hacer hover */
+}
+
+main{
+    margin-left: 350px;
+    position: absolute;
+}
+
+.logout {
+    margin-top: auto;  /* Mantiene el botón de logout al final del sidebar */
+    background-color: #c01300;
+}
+
+.logout:hover {
+    background-color: #FF0000;
+}
