@@ -23,14 +23,14 @@ const GenerarReportes = () => {
                     fechafin,
                 });
                 if (response.data.status === 'success') {
-                    setReporte(response.data.data);
-                    generarPDF(response.data.data);
+                    setReporte(response.data);
+                    generarPDF(response.data);
                     reportess();
                 } else {
                     fechasalerta();
                 }
             } catch (error) {
-                console.error('Error generando el reporte:', error);
+                console.log("Aqui es el error: ", error);
                 alertaglobal();
             }
         } else if (tiporeporte === 'Proyectos Finalizados') {
@@ -53,7 +53,7 @@ const GenerarReportes = () => {
         }
     }
 
-    const generarPDF = (datos) => {
+    const generarPDF = (datos, fechainicio, fechafin) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
 

@@ -2,8 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Encabezado from '../components/Encabezado';
 import Nav from '../components/Nav';
-import GenerarReportes from '../components/reportes/GenerarReportes';
-/* import GenReportes from '../components/reportes/GenReportes'; VANE*/
+import GenerarReporte from '../components/reportes/GenerarReporte';
 
 const Reportes = () => {
     return (
@@ -12,7 +11,7 @@ const Reportes = () => {
             <Nav />
                 <div className="row">
                     <main className="col-8 mt-5">
-                        <GenerarReportes />
+                        <GenerarReporte />
                         {/* <GenReportes /> VANE */}
                     </main>
                 </div>

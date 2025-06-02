@@ -4,6 +4,7 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf'; 
+import autoTable from 'jspdf-autotable';
 import { alertaglobal, cotizacionsuccess } from '../alertas';
 
 const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
@@ -38,12 +39,12 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
     }
 
     const numberToWords = (num) => {
-        const unidades = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
-        const decenas = ['diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
-        const excepcionesDecenas = ['once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
-        const centenas = ['cien', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+        const unidades = ['Cero', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho', 'Nueve'];
+        const decenas = ['Diez', 'Veinte', 'Treinta', 'Cuarenta', 'Cincuenta', 'Sesenta', 'Setenta', 'Ochenta', 'Noventa'];
+        const excepcionesDecenas = ['Once', 'Doce', 'Trece', 'Catorce', 'Quince', 'Dieciséis', 'Diecisiete', 'Dieciocho', 'Diecinueve'];
+        const centenas = ['Cien', 'Doscientos', 'Trescientos', 'Cuatrocientos', 'Quinientos', 'Seiscientos', 'Setecientos', 'Ochocientos', 'Novecientos'];
 
-        const miles = ['', 'mil', 'millón', 'mil millones', 'billón'];
+        const miles = ['', 'Mil', 'Millón', 'Mil Millones', 'Billón'];
 
         const convertir = (n) => {
             if (n < 10) return unidades[n];
@@ -91,34 +92,33 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
 
 
     useEffect(() => {
-        const calcularTotales = () => {
-            const cantidad = parseFloat(cotizaciones.cantprod_cot) || 0;
-            const precioUnitario = parseFloat(cotizaciones.precprod_cot) || 0;
+    const calcularTotales = () => {
+        const cantidad = parseFloat(cotizaciones.cantprod_cot) || 0;
+        const precioUnitario = parseFloat(cotizaciones.precprod_cot) || 0;
 
-            const importe = cantidad * precioUnitario;
-            const subtotal = importe;
-            const iva = subtotal * 0.16;
-            const isr = tipopersona === "moral" ? subtotal * 0.0125 : 0;
-            const total = subtotal + iva - isr;
+        const importe = cantidad * precioUnitario;
+        const subtotal = importe;
+        const iva = subtotal * 0.16;
+        const isr = tipopersona === "moral" ? subtotal * 0.0125 : 0;
+        const total = subtotal + iva - isr;
 
-            const importeEnLetras = numberToWords(total);
+        const importeEnLetras = numberToWords(total);
 
-            setCotizaciones((prevState) => ({
-                ...prevState,
-                imptot_cot: importe.toFixed(2),
-                subtot_cot: subtotal.toFixed(2),
-                iva_cot: iva.toFixed(2),
-                isr_cot: isr.toFixed(2),
-                total_cot: total.toFixed(2),
-                monlet_cot: importeEnLetras,
-            }));
-        };
+        setCotizaciones((prevState) => ({
+            ...prevState,
+            imptot_cot: importe.toFixed(2),
+            subtot_cot: subtotal.toFixed(2),
+            iva_cot: iva.toFixed(2),
+            isr_cot: isr.toFixed(2),
+            total_cot: total.toFixed(2),
+            monlet_cot: importeEnLetras,
+        }));
+    };
 
-        if (tipopersona) {
-            calcularTotales();
-        }
-    }, [cotizaciones.cantprod_cot, cotizaciones.precprod_cot, tipopersona, cotizaciones]);
-
+    if (tipopersona) {
+        calcularTotales();
+    }
+}, [cotizaciones.cantprod_cot, cotizaciones.precprod_cot, tipopersona]);
 
 
     const Change = (e) => {
@@ -213,7 +213,7 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
             ],
         ];
 
-        doc.autoTable({
+        autoTable(doc,{
             startY: tableStartY,
             head: [tableHeaders],
             body: tableBody,
@@ -301,7 +301,7 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
             ],
         ];
 
-        doc.autoTable({
+        autoTable(doc,{
             startY: tableStartY,
             head: [tableHeaders],
             body: tableBody,
@@ -353,10 +353,8 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
             });
 
             setCliente(response.data.cliente);
-            console.log('Datos de estados exitoso');
         } catch (error) {
             console.error(error);
-            console.log('Error al realizar la petición');
         }
     }
 
@@ -368,10 +366,8 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
             });
 
             setProducto(response.data.producto);
-            console.log('Datos de estados exitoso');
         } catch (error) {
             console.error(error);
-            console.log('Error al realizar la petición');
         }
     }
 
@@ -449,11 +445,11 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
                             </Form.Group>
                             <Form.Group controlId="precprod_cot" className="mb-2">
                                 <Form.Label className='d-flex' style={{ fontWeight: 'bold' }}>Precio Unitario:</Form.Label>
-                                <Form.Control type="number" name='precprod_cot' placeholder="Precio unitario" value={cotizaciones.precprod_cot} min='0' onChange={Change} />
+                                <Form.Control type="number" name='precprod_cot' placeholder="Precio unitario" value={cotizaciones.precprod_cot} min='0' step='0.01' onChange={Change} />
                             </Form.Group>
                             <Form.Group controlId="imptot_cot" className="mb-2">
                                 <Form.Label className='d-flex' style={{ fontWeight: 'bold' }}>Importe Total:</Form.Label>
-                                <Form.Control type="number" name='imptot_cot' placeholder="Importe total" value={cotizaciones.imptot_cot || ''} min='0' onChange={Change} />
+                                <Form.Control type="number" name='imptot_cot' placeholder="Importe total" value={cotizaciones.imptot_cot || ''} min='0' step='0.01' onChange={Change} />
                             </Form.Group>
                         </section>
 
@@ -461,21 +457,21 @@ const UpdateCot = ({ cotizacion, id_cot, onSuccess }) => {
                             <h4 className="text-danger fw-bold mb-3 text-center">Totales</h4>
                             <Form.Group controlId="subtot_cot" className="mb-2">
                                 <Form.Label className='d-flex' style={{ fontWeight: 'bold' }}>Subtotal:</Form.Label>
-                                <Form.Control type="number" name="subtot_cot" value={cotizaciones.subtot_cot || ''} min='0' onChange={Change} />
+                                <Form.Control type="number" name="subtot_cot" value={cotizaciones.subtot_cot || ''} min='0' step='0.01' onChange={Change} />
                             </Form.Group>
                             <Form.Group controlId="iva_cot" className="mb-2">
                                 <Form.Label className='d-flex' style={{ fontWeight: 'bold' }}>IVA (16%):</Form.Label>
-                                <Form.Control type="number" name="iva_cot" value={cotizaciones.iva_cot || ''} min='0' onChange={Change} />
+                                <Form.Control type="number" name="iva_cot" value={cotizaciones.iva_cot || ''} min='0' step='0.01' onChange={Change} />
                             </Form.Group>
                             {tipopersona === "moral" && (
                                 <Form.Group controlId="isr_cot" className="mb-3">
                                     <Form.Label className='d-flex' style={{ fontWeight: 'bold' }}>ISR(1.25%):</Form.Label>
-                                    <Form.Control type="number" name='isr_cot' placeholder="ISR" value={cotizaciones.isr_cot || ''} min='0' onChange={Change} />
+                                    <Form.Control type="number" name='isr_cot' placeholder="ISR" value={cotizaciones.isr_cot || ''} min='0' step='0.01' onChange={Change} />
                                 </Form.Group>
                             )}
                             <Form.Group controlId="total_cot" className="mb-2">
                                 <Form.Label className='d-flex' style={{ fontWeight: 'bold' }}>Total:</Form.Label>
-                                <Form.Control type="number" name="total_cot" value={cotizaciones.total_cot || ''} min='0' onChange={Change} />
+                                <Form.Control type="number" name="total_cot" value={cotizaciones.total_cot || ''} min='0' step='0.01' onChange={Change} />
                             </Form.Group>
                             <Form.Group controlId="monlet_cot">
                                 <Form.Label>Importe en Letras</Form.Label>

@@ -35,8 +35,7 @@ function App() {
           <Route path="/gestionventas" element={<GestionVentas />} />
           <Route path="/generacioncotizaciones" element={<Cotizacion />} />
           <Route path="/generacionreportes" element={<Reportes />} />
-          {/* <Route path="/evidencias" element={<Evidencias />} /> */}
-          <Route path="/Evidencias" element={<Evidencias />} /> {/* ERWIN */}
+          <Route path="/evidencias" element={<Evidencias />} /> {/* ERWIN */}
           <Route path="/generar-cotizacion" element={<GenCotizacion />} /> {/* Nueva ruta */}
         </Routes>
       </div>
